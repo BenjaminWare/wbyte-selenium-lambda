@@ -18,4 +18,6 @@ if [[ -d "infra" ]]; then
         --context region=${AWS_REGION} \
         --context apiKey=${API_KEY} \
         --context applicationTag=${APPLICATION_TAG}
+
+    npm run cdk bootstrap
 fi
