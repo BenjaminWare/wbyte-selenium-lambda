@@ -8,7 +8,7 @@ from selenium.webdriver.chrome.options import Options as ChromeOptions
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
-
+isLocal = False
 
 def initialise_driver():
     chrome_options = ChromeOptions()
@@ -27,15 +27,21 @@ def initialise_driver():
     chrome_options.add_argument("--log-path=/tmp")
     chrome_options.binary_location = "/opt/chrome/chrome-linux64/chrome"
 
-    service = Service(
-        executable_path="/opt/chrome-driver/chromedriver-linux64/chromedriver",
-        service_log_path="/tmp/chromedriver.log"
-    )
+    driver = None
+    if not isLocal:
+        service = Service(
+            executable_path="/opt/chrome-driver/chromedriver-linux64/chromedriver",
+            service_log_path="/tmp/chromedriver.log"
+        )
 
-    driver = webdriver.Chrome(
-        service=service,
-        options=chrome_options
-    )
+        driver = webdriver.Chrome(
+            service=service,
+            options=chrome_options
+        )
+    else:
+        driver = webdriver.Chrome(
+            options=chrome_options
+        )
 
     return driver
 
@@ -58,3 +64,7 @@ def lambda_handler(event, context):
     }
 
     return response
+
+if __name__ == "__main__":
+    isLocal = True
+    print(lambda_handler(None,None))
